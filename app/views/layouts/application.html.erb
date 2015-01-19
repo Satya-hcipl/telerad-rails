@@ -22,7 +22,7 @@
 	<body class="<%= session[:user_id] ? "page-header-fixed page-quick-sidebar-over-content" : "login" %>" >
 		<% if !session[:user_id].nil? %>
 			<%= render "layouts/header" %>
-			<div class="use-sidebar sidebar-at-right" id="main">
+			<div class="sidebar-at-right" id="main">
 				<div class="page-container">
 					<%= render "layouts/side_bar" %>
 					<div class="page-content-wrapper">
@@ -37,7 +37,7 @@
 									  </li>
 									</ul>
 								</div>
-								<%= render "layouts/flash" %>
+								<%= render partial: "layouts/flash" %>
 
 								<%= yield %>
 						    </div>
@@ -46,7 +46,7 @@
 					    	<%= render "patients/statusbar" %>
 					    </div>
 						<a href="#" id="separator"></a>
-					    <div class="clearer">&nbsp;</div>
+					    <div id= "clearer" class="clearer">&nbsp;</div>
 			        </div>
 				</div>
 			</div>

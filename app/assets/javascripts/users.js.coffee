@@ -1,3 +1,14 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+initialize = ->
+  'use strict'
+  $('#sidebar').hide()
+  $('#separator').hide()
+  $('#clearer').hide()
+  Metronic.init()
+  Layout.init()
+  Login.init()
+  QuickSidebar.init()
+  ComponentsPickers.init()
+  Demo.init()
+
+$(document).ready initialize
+$(document).on "page:load", initialize

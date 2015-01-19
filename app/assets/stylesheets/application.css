@@ -12,6 +12,7 @@
  *= require assets/global/plugins/font-awesome/css/font-awesome.min
  *= require assets/global/plugins/simple-line-icons/simple-line-icons.min
  *= require assets/global/plugins/bootstrap/css/bootstrap.min
+ *= require assets/global/plugins/uniform/css/uniform.default.css
  *= require assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min
  *= require assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5
  *= require assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min

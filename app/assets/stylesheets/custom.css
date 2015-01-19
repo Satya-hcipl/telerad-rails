@@ -7,16 +7,15 @@
     border-color: #BCD;
     display: none;
     overflow: scroll;
-    height: 602px;
 }
 #content {
     width: 97%;
 }
  
-.use-sidebar #content {width: 64%;}
+.use-sidebar #content {width: 70%;}
 .use-sidebar #sidebar {
     display: block;
-    width: 32%;
+    width: 27%;
 }
  
 .sidebar-at-left #sidebar {margin-right: 1%;}
@@ -33,7 +32,6 @@
     width: 1%;
 }
 .use-sidebar #separator {
-    background: url('img/vertical-separator.gif') repeat-y center top;
     border-color: #FFF;
 }
 #separator:hover {

@@ -25,9 +25,9 @@ class StudiesController < ApplicationController
     @study = current_user.studies.new
     uploaded_io = params[:study][:upload]
 
-    # uploaded_io.each do |tmpFile|
-    if uploaded_io.content_type.match('application/octet-stream')
+    if uploaded_io.content_type.match('application/octet-stream') || uploaded_io.content_type.match('application/dicom')
       upload(uploaded_io.original_filename, uploaded_io.tempfile.path)
+      # render nothing: true
     elsif uploaded_io.content_type.match('application/zip')
       Zip::File.open(uploaded_io.tempfile.path) do |zip_file| 
         zip_file.each do |entry|
@@ -40,34 +40,19 @@ class StudiesController < ApplicationController
           end
         end
       end
+      # render nothing: true
     else
       flash.now[:danger] = "Invalid file Format"
-      redirect_to "patients/show/#{params[:study][:patient_id] }"
+      # redirect_to patient_path(params[:study][:patient_id])
+      # render "patients/flash"
+      # redirect_to patient_path(params[:study][:patient_id])
     end
-    # end
-    render nothing: true
+    render json: nil, status: :ok
   end
-
-  # def upload_stream
-  #   response.headers['Content-Type'] = 'text/event-stream'
-  #   sse = SSE.new(response.stream)
-  #   last_updated = current_user.studies.last_updated.first
-  #   # if recently_changed? last_updated
-  #     begin
-  #       # sse.write(last_updated, event: 'results')
-  #       sse.write({:time => DateTime.now})
-  #     rescue IOError
-  #       # When the client disconnects, we'll get an IOError on write
-  #     ensure
-  #       sse.close
-  #     end
-  #   # end
-  #   render nothing: true
-  # end
 
   private
     def current_patient
-      @patient = Patient.where(id: params[:id])
+      @patient = Patient.where(id: params[:study][:patient_id])
     end
 
     def studies_params
@@ -82,7 +67,6 @@ class StudiesController < ApplicationController
       existing_record = current_user.studies.find_by(study_uid: @study.study_uid)
       if !existing_record.nil?
         if existing_record[:patient_id] == @study.patient_id
-          debugger
           if !node.echo.nil?
             node.send(path)
             # respond_to do |format|
@@ -103,7 +87,6 @@ class StudiesController < ApplicationController
               # format.json { render json: @study.errors, status: :unprocessable_entity }
             end
           else
-            debugger
           end
           # end
         else
@@ -115,6 +98,7 @@ class StudiesController < ApplicationController
           if @study.save
             study = JSON.parse(@study.to_json)
             study["filename"] = filename
+            study["updated_at"]= DateTime.parse(study['updated_at']).strftime("%Y-%m-%d %H:%M:%S")
             $redis.publish('study.create', study.to_json)
             # format.html {
             #   render :json => [@study.to_jq_upload].to_json,

@@ -1,5 +1,10 @@
 table_ready = ->
   'use strict'
+  Metronic.init()
+  Layout.init()
+  QuickSidebar.init()
+  ComponentsPickers.init()
+  Demo.init()
   # Initialize the jQuery File Upload widget:
   $("#fileupload").fileupload
     sequentialUploads: true
@@ -42,9 +47,11 @@ table_ready = ->
       ]
     }
   $("#fileupload").bind "fileuploadfail", (e, data) ->
-    oTable.ajax.reload()
+    # oTable.ajax.reload()
+    alert("fail")
   $("#fileupload").bind "fileuploaddone", (e, data) ->
-    oTable.ajax.reload()
+    alert("success")
+    # oTable.ajax.reload()
 
 
   # Show sidebar
