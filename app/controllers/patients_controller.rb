@@ -57,7 +57,6 @@ class PatientsController < ApplicationController
     respond_to do |format|
       if @patient
         format.html {
-          flash[:danger] = "Black Sheeep, hahahahahaha!"
           redirect_to :controller => 'users', :action => 'index'  
         }
         format.json { render json: @patient }

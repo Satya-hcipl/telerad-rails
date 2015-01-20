@@ -32,10 +32,10 @@ class StudyDatatable < AjaxDatatablesRails::Base
       [
         StudyTable.find_by(study_iuid: record.study_uid)[:study_desc],
         StudyTable.find_by(study_iuid: record.study_uid)[:num_instances],
-        StudyTable.find_by(study_iuid: record.study_uid)[:study_datetime],
-        record.updated_at,
-        link_to("Comments",{:controller=>"comments", :action => "show",:id => record.id}, 'data-toggle' => "modal", 'data-target'=>"#commentModal", :remote => true),
-        link_to("View Study", "http://localhost:8080/weasis/samples/applet.jsp?commands=%24dicom%3Aget%20-w%20http%3A//localhost%3A8080/weasis-pacs-connector/manifest%3FstudyUID%3D"+record.study_uid,  target: "_blank")
+        Time.parse("#{StudyTable.find_by(study_iuid: record.study_uid)[:study_datetime]}").strftime("%d-%m-%Y %H:%M:%S") +" "+ Time.parse("#{StudyTable.find_by(study_iuid: record.study_uid)[:study_datetime]}").zone ,
+        Time.parse("#{record.updated_at}").strftime("%d-%m-%Y %H:%M:%S") +" "+ Time.parse("#{record.updated_at}").zone ,
+        link_to("Comments",{:controller=>"comments", :action => "show",:id => record.id}, 'data-toggle' => "modal", 'data-target'=>"#commentModal", :remote => true, class: "btn btn-success btn-sm"),
+        link_to("View Study", "http://localhost:8080/weasis/samples/applet.jsp?commands=%24dicom%3Aget%20-w%20http%3A//localhost%3A8080/weasis-pacs-connector/manifest%3FstudyUID%3D"+record.study_uid,  target: "_blank", class: "btn btn-success btn-sm")
       ]
     end
   end
