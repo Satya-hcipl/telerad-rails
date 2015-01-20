@@ -1,10 +1,5 @@
 table_ready = ->
   'use strict'
-  Metronic.init()
-  Layout.init()
-  QuickSidebar.init()
-  ComponentsPickers.init()
-  Demo.init()
   # Initialize the jQuery File Upload widget:
   $("#fileupload").fileupload
     sequentialUploads: true
@@ -47,11 +42,9 @@ table_ready = ->
       ]
     }
   $("#fileupload").bind "fileuploadfail", (e, data) ->
-    # oTable.ajax.reload()
-    alert("fail")
+    oTable.ajax.reload()
   $("#fileupload").bind "fileuploaddone", (e, data) ->
-    alert("success")
-    # oTable.ajax.reload()
+    oTable.ajax.reload()
 
 
   # Show sidebar
@@ -103,6 +96,9 @@ table_ready = ->
     # $("#dustatus .files").appendTo
     $('#dustatus > tbody:last').append('<tr class="fade in"><td>Added</td><td>'+study.filename+'</td><td>'+study.updated_at+'</td><td></td></tr>')
 
+  source.addEventListener 'study.error', (e) ->
+    # $("#dustatus .files").appendTo
+    $('#dustatus > tbody:last').append('<tr><td></td><td>'+e.data+'</td><td></td><td></td></tr>')
   # source.onmessage = (event) ->
   #   alert event.data
 

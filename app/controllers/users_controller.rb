@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-
   before_filter :logged_in_user, except: [:new, :create]
 
   def index
@@ -41,12 +40,5 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :gateway, :gateway_type, :password, :password_confirmation)
   end
 
-  def logged_in_user
-    unless logged_in?
-      store_location
-      flash[:danger] = "Please log in"
-      redirect_to login_url
-    end
-  end
 end
 

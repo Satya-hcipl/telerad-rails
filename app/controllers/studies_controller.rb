@@ -42,12 +42,13 @@ class StudiesController < ApplicationController
       end
       # render nothing: true
     else
-      flash.now[:danger] = "Invalid file Format"
+      $redis.publish('study.error', "#{uploaded_io.original_filename} - Invalid file format")
+      # flash[:danger] = "Invalid file Format"
       # redirect_to patient_path(params[:study][:patient_id])
       # render "patients/flash"
-      # redirect_to patient_path(params[:study][:patient_id])
+      # redirect_to "/patients/1.html"
     end
-    render json: nil, status: :ok
+    render nothing: true
   end
 
   private

@@ -1,3 +1,4 @@
+<% provide(:patient_name, " : "+ Patient.find_by(:id => params[:id]).name) %>
 <%#= render partial: "patients/flash" %>
 <div class="row">
   <div class="col-md-12">
@@ -22,6 +23,7 @@
             </tr>
           </thead>
         </table>
+        <br/><br/>
         <%= render partial: 'comments/show'%>
       </div>
     </div>

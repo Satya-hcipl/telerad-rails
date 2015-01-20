@@ -44,4 +44,14 @@
 //= require assets/admin/pages/scripts/table-advanced
 //= require assets/admin/pages/scripts/form-validation
 //= require assets/admin/pages/scripts/components-pickers
-//= require assets/admin/pages/scripts/login
+
+var initialize = function() {    
+	Metronic.init(); // init metronic core components
+	Layout.init(); // init current layout
+	QuickSidebar.init();
+	ComponentsPickers.init();
+	Demo.init();
+};
+
+$(document).ready(initialize);
+$(document).on("page:load", initialize);

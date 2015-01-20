@@ -1,4 +1,5 @@
 class PatientsController < ApplicationController
+
   include ActionController::Live
   before_filter :authenticate_user, except: [:emr, :upload_stream]
 
