@@ -245,7 +245,7 @@ var Login = function() {
         //main function to initiate the module
         init: function() {
 
-            handleLogin();
+            // handleLogin();
             handleForgetPassword();
             handleRegister();
 

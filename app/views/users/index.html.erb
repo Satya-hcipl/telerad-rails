@@ -1,29 +1,4 @@
-<%= render partial: "patients/header" %> 
-
-<!-- <div class="clearfix">
-</div> -->
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-  <%= render partial: "patients/side_bar" %> 
-  <!-- BEGIN CONTENT -->
-  <div class="page-content-wrapper">
-    <div class="page-content">
-         
-      <!-- BEGIN PAGE HEADER-->
-      <h3 class="page-title">
-      <%= current_user.name %>
-      </h3>
-      <div class="page-bar">
-        <ul class="page-breadcrumb">
-          <li>
-            <i class="fa fa-home"></i>
-            <%= link_to "Patient List", {:controller => "users", :action => :index}%>
-          </li>
-        </ul>
-      </div>
-      <!-- END PAGE HEADER-->
-      <%= render partial: "patients/flash" %>
-      <!-- BEGIN PAGE CONTENT-->
+<% provide(:patient_name, "" )%>
       <div class="row">
         <div class="col-md-12">
           <!-- BEGIN EXAMPLE TABLE PORTLET-->
@@ -64,35 +39,14 @@
             </div>
           </div>    
 
-            <%= link_to "+patient", '#newPatientModal', :class => "btn btn-primary", :'data-toggle' => 'modal' %><br/>
-            <%= render partial: 'patients/new', locals: {patient: @patient} %>
+            <%= link_to "Add Patient", new_patient_path ,:remote => true, :class => "btn btn-primary" %><br/>
+            <%#= render partial: 'patients/new', locals: {patient: @patient} %>
             <div id="editPatient"></div>
+            <div id="newPatient"></div>
 
         </div>
       </div>
       <!-- END PAGE CONTENT-->
-    </div>
-  </div>
-  <!-- END CONTENT -->
-  
-</div>
-<!-- END CONTAINER -->
-
-<%= render partial: "patients/footer" %> 
-
 <%= javascript_tag("
       $('#patientsTable').DataTable();
 ") %>
-
-<%#= javascript_tag("
-  $('.patient_edit').bind('ajax:success', function(data, status, xhr) {
-    $('#editPatientModal').modal('show');
-    $('[name=\"patient[name]\"]').val(status.name);
-    $('[name=\"patient[address]\"]').val(status.address);
-    $('[name=\"patient[gender]\"]').val(status.gender);
-    $('[name=\"patient[dob]\"]').val(status.dob);
-    $('[name=\"patient[pincode]\"]').val(status.pincode);
-  });
-") %>
-
-

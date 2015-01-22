@@ -1,70 +1,31 @@
-<%= render partial: "header" %> 
-
-<!-- <div class="clearfix">
-</div> -->
-<!-- BEGIN CONTAINER -->
-<div class="page-container">
-  <%= render partial: "side_bar" %> 
-  <!-- BEGIN CONTENT -->
-  <div class="page-content-wrapper">
-    <div class="page-content">
-          <!-- BEGIN PAGE HEADER-->
-        <h3 class="page-title">
-      <%= current_user.name %>
-      </h3>
-      <div class="page-bar">
-        <ul class="page-breadcrumb">
-          <li>
-            <i class="fa fa-home"></i>
-            <%= link_to "Patient List", {:controller => "users", :action => :index}%> 
-            <i class="fa fa-angle-right"></i>        
-          </li> 
-          <li>
-            <%= link_to "Study List:"+@patient.name, {:controller => "users", :action => :index} %>
-          </li>           
-        </ul>
+<% provide(:patient_name, " : "+ Patient.find_by(:id => params[:id]).name) %>
+<%#= render partial: "patients/flash" %>
+<div class="row">
+  <div class="col-md-12">
+    <%#= link_to "List", {:controller => "users", :action => :index}, :class => "btn btn-primary" %>
+    <%= render partial: 'patients/uploadbar', :locals => { study: @study} %>
+    <div class="portlet box blue">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-globe"></i>Studies
+        </div>              
       </div>
-      <!-- END PAGE HEADER-->     
-      <%= render partial: "flash" %> 
-      <!-- BEGIN PAGE CONTENT-->
-      <%= render partial: 'uploadbar', locals: {study: @study} %> 
-      <div class="row">
-        <div class="col-md-12">          
-          <!-- BEGIN EXAMPLE TABLE PORTLET-->
-          <div class="portlet box blue">
-            <div class="portlet-title">
-              <div class="caption">
-                <i class="fa fa-globe"></i>Files Lists
-              </div>              
-            </div>
-            <div class="portlet-body">
-            <table id="studiesTable" class="table table-bordered" data-source="<%= patient_path(format: :json) %>">
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th>Images</th>
-                  <th>Conducted on</th>
-                  <th>Updated on</th>
-                  <th>Comments</th>
-                  <th>Viewer</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </br></br>
-            </div>
-          </div>                    
-          <!-- END EXAMPLE TABLE PORTLET--> 
-          <%= render partial: 'comments/show'%>
-        </div>
+      <div class="portlet-body">
+        <table id="studiesTable" data-source="<%= patient_path(format: :json) %>" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Images</th>
+              <th>Conducted on</th>
+              <th>Updated on</th>
+              <th>Comments</th>
+              <th>Viewer</th>
+            </tr>
+          </thead>
+        </table>
+        <br/><br/>
+        <%= render partial: 'comments/show'%>
       </div>
-      <!-- END PAGE CONTENT-->
     </div>
   </div>
-  <!-- END CONTENT -->
 </div>
-<!-- END CONTAINER -->
-
-<%= render partial: "footer" %> 
-

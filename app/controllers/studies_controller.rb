@@ -5,6 +5,8 @@ include DICOM
 
 class StudiesController < ApplicationController
 
+  include ActionController::Live
+  
   def index
 
   end
@@ -18,83 +20,115 @@ class StudiesController < ApplicationController
   end
 
   def create
+    response.headers['Content-Type'] = 'text/event-stream'
+
     @study = current_user.studies.new
     uploaded_io = params[:study][:upload]
-    debugger
-    Zip::File.open(uploaded_io[0].tempfile.path) do |zip_file| 
-      zip_file.each do |entry|
-        if entry.ftype.to_s.match(/directory/)
 
-        else
-          filepath = "/tmp/" + SecureRandom.hex
-          entry.extract(filepath)
-          upload(filepath)
+    if uploaded_io.content_type.match('application/octet-stream') || uploaded_io.content_type.match('application/dicom')
+      upload(uploaded_io.original_filename, uploaded_io.tempfile.path)
+      # render nothing: true
+    elsif uploaded_io.content_type.match('application/zip')
+      Zip::File.open(uploaded_io.tempfile.path) do |zip_file| 
+        zip_file.each do |entry|
+          if entry.ftype.to_s.match(/directory/)
+
+          else
+            filepath = "/tmp/" + SecureRandom.hex
+            entry.extract(filepath)
+            contentType = `file -bi #{filepath}`.strip.split("\;")[0]
+            if contentType.match('application/octet-stream') || contentType.match('application/dicom')
+              upload(entry.name.split('/').last, filepath)
+            else
+              $redis.publish('study.error', "#{entry.name} - Invalid file format")
+            end
+          end
         end
       end
+      # render nothing: true
+    else
+      $redis.publish('study.error', "#{uploaded_io.original_filename} - Invalid file format")
+      # flash[:danger] = "Invalid file Format"
+      # redirect_to patient_path(params[:study][:patient_id])
+      # render "patients/flash"
+      # redirect_to "/patients/1.html"
     end
-    # uploaded_io.each do |tmpFile|
-    #   upload(tmpFile.tempfile.path)
-    # end
+    render nothing: true
   end
 
   private
     def current_patient
-      @patient = Patient.where(id: params[:id])
+      @patient = Patient.where(id: params[:study][:patient_id])
     end
 
     def studies_params
       params.require(:study).permit(:patient_id, :user_id, :study_uid, :created_at, :updated_at)
     end
 
-    def upload (path)
-      node = DClient.new("192.168.1.3", 11112, ae: "HIPL", host_ae: "DCM4CHEE")
+    def upload (filename, path)
+      node = DClient.new("192.168.1.13", 11112, ae: "HIPL", host_ae: "DCM4CHEE")
+      begin
+        node.test
+      rescue Exception
+        $redis.publish('study.error', "Unable to upload #{filename} - Server not responding. Try Again after sometime!")
+        return
+      end
       dcm = DObject.read(path)
       @study.study_uid = dcm.value("0020,000D")
       @study.patient_id = params[:study][:patient_id] 
       existing_record = current_user.studies.find_by(study_uid: @study.study_uid)
       if !existing_record.nil?
         if existing_record[:patient_id] == @study.patient_id
-          node.send(path)
-          puts "existing record nil"
-          respond_to do |format|
-            if existing_record.update_attributes(:updated_at => DateTime.now)
-              puts "html format"
-              format.html {
-                render :json => [@study.to_jq_upload].to_json,
-                :content_type => 'text/html',
-                :layout => false
-              }
-              puts "json format"
-              format.json { render json: {files: [@study.to_jq_upload]}, status: :created, location: @study }
-              puts "no format"
+          if !node.echo.nil?
+            node.send(path)
+            # respond_to do |format|
+            if existing_record.update_attributes(:updated_at => (time = DateTime.now))
+              study = JSON.parse(@study.to_json)
+              study["filename"] = filename
+              study["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+              $redis.publish('study.update', study.to_json)
+             #  format.html {
+             #    render :json => [@study.to_jq_upload].to_json, :content_type => 'text/html', :layout => false
+             #  }
+             #  format.json { 
+             #   render json: {files: [@study.to_jq_upload]}, status: :created, location: @study 
+             # }
             else
-              flash[:danger] = "Connectivity problem"
-              format.html { render action: "new" }
-              format.json { render json: @study.errors, status: :unprocessable_entity }
+              $redis.publish('study.error', "Unable to upload #{filename} - Try Again after sometime!")
+              # format.html { render "patients/show" }
+              # format.json { render json: @study.errors, status: :unprocessable_entity }
             end
+          else
           end
+          # end
         else
-          puts "File not uploaded due to redunduncy!! Please check if the right patient profile is selected."
-          flash[:danger] = "File not uploaded due to redunduncy!! Please check if the right patient profile is selected."
+          $redis.publish('study.error', "Unable to upload #{filename} - File not uploaded due to redunduncy!! Please check if the right patient profile is selected.")
         end
       else
         node.send(path)
-        respond_to do |format|
+        # respond_to do |format|
           if @study.save
-            puts "study saved new"
-            format.html {
-              render :json => [@study.to_jq_upload].to_json,
-              :content_type => 'text/html',
-              :layout => false
-            }
-            format.json { render json: {files: [@study.to_jq_upload]}, status: :created, location: @study }
+            study = JSON.parse(@study.to_json)
+            study["filename"] = filename
+            study["updated_at"]= DateTime.parse(study['updated_at']).strftime("%Y-%m-%d %H:%M:%S")
+            $redis.publish('study.create', study.to_json)
+            # format.html {
+            #   render :json => [@study.to_jq_upload].to_json,
+            #   :content_type => 'text/html',
+            #   :layout => false
+            # }
+            # format.json { render json: {files: [@study.to_jq_upload]}, status: :created, location: @study }
           else
-            puts "study not saved new"
-            flash[:danger] = "Connectivity problem"
-            format.html { render action: "new" }
-            format.json { render json: @study.errors, status: :unprocessable_entity }
+            $redis.publish('study.error', "Unable to upload #{filename} - Try Again after sometime!")
+            # format.html { render "patients/show" }
+            # format.json { render json: @study.errors, status: :unprocessable_entity }
           end
-        end
+        # end
       end
     end
+    def recently_changed? last_study
+      last_study.created_at > 5.seconds.ago or
+        last_study.updated_at > 5.seconds.ago
+    end
+
 end

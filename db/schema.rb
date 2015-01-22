@@ -16,18 +16,19 @@ ActiveRecord::Schema.define(version: 20141230072244) do
   create_table "comments", force: true do |t|
     t.integer  "study_id"
     t.integer  "user_id"
+    t.integer  "patient_id"
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "patients", force: true do |t|
-    t.string   "name",       limit: 100, default: "Guest", null: false
-    t.string   "gender",     limit: 20,  default: "Guest", null: false
+    t.string   "name"
+    t.string   "gender"
     t.date     "dob"
     t.text     "address"
-    t.string   "pincode",    limit: 20,  default: "Guest", null: false
-    t.string   "ext_uid",    limit: 20,  default: "Guest", null: false
+    t.string   "pincode",    default: "0"
+    t.string   "ext_uid",    default: "Guest"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

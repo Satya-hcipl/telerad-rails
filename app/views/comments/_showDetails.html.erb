@@ -1,10 +1,16 @@
+<div style="overflow: scroll; height: 150px;">
+<pre>
 <% comments.each do |comment|%>
-<pre> <b> <%= comment.comment %></b> on <i><%= comment.created_at %></i> by <i><%= by%></i> </pre>
+ <b> <%= comment.comment %></b> on <i><%= comment.created_at.strftime("%Y-%m-%d %H:%M:%S")
+ %> <%=comment.created_at.zone %></i> by <i><%= by%></i> 
 <% end %>
+</pre>
+</div>
 
 <%= form_for(:comment, :url => {:controller => 'comments', :action => 'create'}, :remote => true) do |f| %>
   <label for="comment-text" class="control-label">Comment:</label>
-  <%= f.text_area :comment, size: "60x12"%>
+  <%= f.text_area :comment, size: "10x5", style: "resize: none", class: "form-control"%>
   <%= f.hidden_field :study_id, value: params[:id]%>
-  <%= f.submit :Post, :button => 'btn btn-primary', id: "submit" %>
+  <br/>
+  <%= f.submit :post, :class => 'btn btn-primary pull-right', id: "submit" %>
 <%end%>

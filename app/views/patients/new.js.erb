@@ -1,8 +1,8 @@
 jQuery(function($) {
-  $("#editPatient").html("<%= escape_javascript(render(:partial => 'edit', :locals => {patient: @patient})) %>");
+  $("#newPatient").html("<%= escape_javascript(render(:partial => 'new', :locals => {patient: @patient})) %>");
   ComponentsPickers.init();
-  $("#editPatientModal").modal('show');
-  $('#edit_patient_form').validate({
+  $("#newPatientModal").modal('show');
+  $('#new_patient_form').validate({
 		debug: true,
 		rules: {
 			"patient[name]": {required: true, minlength: 3},
@@ -25,4 +25,3 @@ jQuery(function($) {
 		}
 	});
 });
-

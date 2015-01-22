@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-
-  before_filter :authenticate_user, except: [:new, :create]
+  before_filter :logged_in_user, except: [:new, :create]
 
   def index
     @patient = Patient.new
@@ -16,6 +15,7 @@ class UsersController < ApplicationController
     if @user.save
       flash[:success] = "You signed up successfully"
       log_in @user
+
       redirect_to(:controller => 'users', :action => 'index')
     else
       flash[:success] = "Form is invalid"
@@ -39,5 +39,6 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :gateway, :gateway_type, :password, :password_confirmation)
   end
+
 end
 

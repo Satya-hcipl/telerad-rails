@@ -4,7 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   before_filter :set_cache_buster
 
-  include SessionsHelper 
+
+  include SessionsHelper
+  
+
 
   def set_cache_buster
     response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
@@ -13,6 +16,14 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+    def logged_in_user
+      unless logged_in?
+        store_location
+        flash[:danger] = "Please log in."
+        redirect_to login_url
+      end
+    end
+    
     def authenticate_user
       if session[:user_id]
         @current_user = User.find session[:user_id]
