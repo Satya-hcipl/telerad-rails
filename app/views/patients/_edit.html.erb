@@ -5,89 +5,80 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="myModalLabel">Edit Patient Details</h4>
       </div>
-      <div class="modal-body">
-          <%= form_for(patient, remote: true, :url => {:controller => 'patients', :action => 'update'}, :html => { :id => "edit_patient_form" }) do |f| %>
-            
-            <% if patient.errors.any? %>
-              <ul class="Signup_Errors">
-                <% for message_error in patient.errors.full_messages %>
-                  <li> <%= message_error %></li>
-                <% end %>
-              </ul>
-            <% end %>
-
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
-              <div class="col-xs-12 col-sm-4 col-md-3" >
-                <%= f.label :name, "Name" %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-7">
-                <%= f.text_field :name, id: 'patientName', class: 'form-control'%>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
+      <%= form_for(patient, remote: true, :url => {:controller => 'patients', :action => 'update'}, :html => { :id => "edit_patient_form" }) do |f| %>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-3" >
+              <%= f.label :name, "Name" %>
             </div>
-            <br/>
-
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
-              <div class="col-xs-12 col-sm-4 col-md-3" >
-                <%= f.label :address, "Address" %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-7">
-                <%= f.text_field :address , class: 'form-control'%>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-7">
+              <%= f.text_field :name, id: 'patientName', class: 'form-control'%>
             </div>
-            <br/>
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          </div>
+          <br>
 
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
-              <div class="col-xs-12 col-sm-4 col-md-3" >
-                <%= f.label :gender, "Gender" %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-7">
-                <label><%= f.radio_button :gender, 'male', :checked => true %> Male </label>
-                <label><%= f.radio_button :gender, 'female' %> Female </label>
-                <label><%= f.radio_button :gender, 'unspecified' %> Unspecified</label>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-3" >
+              <%= f.label :address, "Address" %>
             </div>
-            <br/>
+            <div class="col-xs-12 col-sm-4 col-md-7">
+              <%= f.text_field :address , class: 'form-control'%>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          </div>
+          <br>
 
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
-              <div class="col-xs-12 col-sm-4 col-md-3" >
-                <%= f.label :dob, "Date of Birth" %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-7">
-                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
-                  <%= f.text_field :dob, :html => {:class=>'form-control' 'readonly' 'required'}, class: 'form-control'%>
-                  <span class="input-group-btn">
-                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
-                  </span>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-3" >
+              <%= f.label :gender, "Gender" %>
             </div>
-            <br/>
+            <div class="col-xs-12 col-sm-4 col-md-7">
+              <label><%= f.radio_button :gender, 'male', :checked => true %> Male </label>
+              <label><%= f.radio_button :gender, 'female' %> Female </label>
+              <label><%= f.radio_button :gender, 'unspecified' %> Unspecified</label>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          </div>
+          <br>
 
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
-              <div class="col-xs-12 col-sm-4 col-md-3" >
-                <%= f.label :pincode, "Pincode" %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-7">
-                <%= f.text_field :pincode, class: 'form-control' %>
-              </div>
-              <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-3" >
+              <%= f.label :dob, "Date of Birth" %>
             </div>
-            <br/>
-            
+            <div class="col-xs-12 col-sm-4 col-md-7">
+              <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="dd-mm-yyyy" data-date-viewmode="years">
+                <%= f.text_field :dob, :html => {:class=>'form-control' 'readonly' 'required'}, class: 'form-control'%>
+                <span class="input-group-btn">
+                  <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                </span>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+            <div class="col-xs-12 col-sm-4 col-md-3" >
+              <%= f.label :pincode, "Pincode" %>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-7">
+              <%= f.text_field :pincode, class: 'form-control' %>
+            </div>
+            <div class="col-xs-12 col-sm-4 col-md-1"></div>
+          </div>
+          <br>
         </div>
         <div class="modal-footer">
           <%= f.submit :Update, class: "btn btn-default"%>
-          <% end %>
-      </div>
+          
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

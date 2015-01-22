@@ -39,9 +39,10 @@
             </div>
           </div>    
 
-            <%= link_to "Add Patient", '#newPatientModal', :class => "btn btn-primary", :'data-toggle' => 'modal' %><br/>
-            <%= render partial: 'patients/new', locals: {patient: @patient} %>
+            <%= link_to "Add Patient", new_patient_path ,:remote => true, :class => "btn btn-primary" %><br/>
+            <%#= render partial: 'patients/new', locals: {patient: @patient} %>
             <div id="editPatient"></div>
+            <div id="newPatient"></div>
 
         </div>
       </div>

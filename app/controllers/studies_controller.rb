@@ -36,7 +36,12 @@ class StudiesController < ApplicationController
           else
             filepath = "/tmp/" + SecureRandom.hex
             entry.extract(filepath)
-            upload(entry.name.split('/').last, filepath)
+            contentType = `file -bi #{filepath}`.strip.split("\;")[0]
+            if contentType.match('application/octet-stream') || contentType.match('application/dicom')
+              upload(entry.name.split('/').last, filepath)
+            else
+              $redis.publish('study.error', "#{entry.name} - Invalid file format")
+            end
           end
         end
       end
@@ -62,6 +67,12 @@ class StudiesController < ApplicationController
 
     def upload (filename, path)
       node = DClient.new("192.168.1.13", 11112, ae: "HIPL", host_ae: "DCM4CHEE")
+      begin
+        node.test
+      rescue Exception
+        $redis.publish('study.error', "Unable to upload #{filename} - Server not responding. Try Again after sometime!")
+        return
+      end
       dcm = DObject.read(path)
       @study.study_uid = dcm.value("0020,000D")
       @study.patient_id = params[:study][:patient_id] 
@@ -83,7 +94,7 @@ class StudiesController < ApplicationController
              #   render json: {files: [@study.to_jq_upload]}, status: :created, location: @study 
              # }
             else
-              flash[:danger] = "Connectivity problem"
+              $redis.publish('study.error', "Unable to upload #{filename} - Try Again after sometime!")
               # format.html { render "patients/show" }
               # format.json { render json: @study.errors, status: :unprocessable_entity }
             end
@@ -91,7 +102,7 @@ class StudiesController < ApplicationController
           end
           # end
         else
-          flash[:danger] = "File not uploaded due to redunduncy!! Please check if the right patient profile is selected."
+          $redis.publish('study.error', "Unable to upload #{filename} - File not uploaded due to redunduncy!! Please check if the right patient profile is selected.")
         end
       else
         node.send(path)
@@ -108,7 +119,7 @@ class StudiesController < ApplicationController
             # }
             # format.json { render json: {files: [@study.to_jq_upload]}, status: :created, location: @study }
           else
-            flash[:danger] = "Connectivity problem"
+            $redis.publish('study.error', "Unable to upload #{filename} - Try Again after sometime!")
             # format.html { render "patients/show" }
             # format.json { render json: @study.errors, status: :unprocessable_entity }
           end

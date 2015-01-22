@@ -38,3 +38,10 @@
     border-color: #ABC;
     background: #DEF;
 }
+
+form label.error {
+    color:red;
+}
+form input.error {
+    border:1px solid red;
+}

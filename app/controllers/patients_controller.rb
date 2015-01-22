@@ -25,7 +25,7 @@ class PatientsController < ApplicationController
   def create
     @patient = current_user.patients.create(patient_params)
     respond_to do |format|
-      if @patient
+      if @patient.save
         format.html {
           flash[:success] = "Patient Created successfully"
           redirect_to(:controller => 'users', :action => 'index')  
@@ -33,12 +33,11 @@ class PatientsController < ApplicationController
         format.json { render json: @patient }
         format.js
       else
-        format.html {
-          flash[:danger] = "Form is invalid"
-          render "new" 
-        }
         format.json { render json: @patient.errors }
-        format.js { render js: "alert('Error on the Form')"}
+        format.js { render js: "alert('error')" }
+          # <% for message_error in @patient.errors.full_messages %>
+          #   <li> <%=j message_error %></li>
+          # <% end %>');"}
       end
     end
   end
@@ -127,7 +126,6 @@ class PatientsController < ApplicationController
           emr_patient = @current_user.patients.create({:name => params[:name] ? params[:name] : params[:gateway], :gender => 'Unspecified', :dob => '1900-01-01', :address => params[:gateway], :pincode => '123456', :ext_uid => params[:ext_uid]})
         end
         if emr_patient
-          debugger
           @study = current_user.studies.new(:patient => Patient.find(emr_patient.id))
           @studies = Patient.find(emr_patient.id).studies.where.not(study_uid: nil)
           render :action => :index

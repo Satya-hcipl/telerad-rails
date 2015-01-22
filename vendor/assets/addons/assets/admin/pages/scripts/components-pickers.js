@@ -8,7 +8,7 @@ var ComponentsPickers = function () {
                 orientation: "right",
                 autoclose: true
             });
-            //$('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
+            // $('body').removeClass("modal-open"); // fix bug when inline picker is used in modal
         }
 
         /* Workaround to restrict daterange past date select: http://stackoverflow.com/questions/11933173/how-to-restrict-the-selectable-date-ranges-in-bootstrap-datepicker */
@@ -212,7 +212,6 @@ var ComponentsPickers = function () {
         //main function to initiate the module
         init: function () {
             handleDatePickers();
-            console.log("date picker");
             /*handleTimePickers();
             handleDatetimePicker();
             handleDateRangePickers();

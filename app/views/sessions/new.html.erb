@@ -15,7 +15,7 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
   <!-- BEGIN LOGIN FORM -->
-  <%= form_for(:session, url: login_path, remote: true, :html => { :class => 'login-form' }) do |f| %>
+  <%= form_for(:session, url: login_path, remote: true, :class => 'login-form') do |f| %>
   <h3 class="form-title">Sign In</h3>
   <div class="alert alert-danger display-hide">
       <button class="close" data-close="alert"></button>

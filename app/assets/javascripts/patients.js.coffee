@@ -88,17 +88,17 @@ table_ready = ->
     study = $.parseJSON(e.data)
     console.log(study.study_uid)
     # $("#dustatus .files").appendTo
-    $('#dustatus > tbody:last').append('<tr class="fade in"><td>Updated</td><td>'+study.filename+'</td><td>'+study.updated_at+'</td><td></td></tr>')
+    $('#dustatus > tbody:last').append('<tr class="fade in" bgcolor="85ADFF"><td>Updated</td><td>'+study.filename+'</td><td>'+study.updated_at+'</td><td></td></tr>')
 
   source.addEventListener 'study.create', (e) ->
     study = $.parseJSON(e.data)
     console.log(study.study_uid)
     # $("#dustatus .files").appendTo
-    $('#dustatus > tbody:last').append('<tr class="fade in"><td>Added</td><td>'+study.filename+'</td><td>'+study.updated_at+'</td><td></td></tr>')
+    $('#dustatus > tbody:last').append('<tr class="fade in" bgcolor="4DB870"><td>Added</td><td>'+study.filename+'</td><td>'+study.updated_at+'</td><td></td></tr>')
 
   source.addEventListener 'study.error', (e) ->
     # $("#dustatus .files").appendTo
-    $('#dustatus > tbody:last').append('<tr><td></td><td>'+e.data+'</td><td></td><td></td></tr>')
+    $('#dustatus > tbody:last').append('<tr bgcolor="#FFA3A3"><td></td><td>'+e.data+'</td><td></td><td></td></tr>')
   # source.onmessage = (event) ->
   #   alert event.data
 
